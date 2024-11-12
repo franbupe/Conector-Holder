@@ -1,8 +1,6 @@
-const apiKey = '41c0fff04435e0638a6406d64376d702';// Coloca aquí tu API Key de Holded
-
-const proyectoIdDeseado = '6673294de56217109c01baeb';// ID de proyecto específico de Holded
+const apiKey = '41c0fff04435e0638a6406d64376d702'; // Coloca aquí tu API Key de Holded
+const proyectoIdDeseado = '6673294de56217109c01baeb'; // ID de proyecto específico de Holded
 const apiUrlBase = 'https://conector-holder.vercel.app/api/projects/v1'; // URL del proxy en Vercel
-
 
 // Llama a cargarProyecto directamente para que cargue al inicio
 cargarProyecto();
@@ -13,8 +11,8 @@ function cargarProyecto() {
         headers: { accept: 'application/json', key: apiKey }
     };
 
-    /*fetch(`https://api.holded.com/api/projects/v1/projects`, options)*/
-	fetch(`${apiUrlBase}/projects`, options)
+    // Usar el proxy en Vercel para obtener proyectos
+    fetch(`${apiUrlBase}/projects`, options)
         .then(response => response.json())
         .then(proyectos => {
             const proyecto = proyectos.find(p => p.id === proyectoIdDeseado);
@@ -31,13 +29,36 @@ function cargarProyecto() {
         });
 }
 
+function cargarTareasPorProyecto(proyecto) {
+    const options = {
+        method: 'GET',
+        headers: { accept: 'application/json', key: apiKey }
+    };
+
+    // Usar el proxy en Vercel para obtener tareas
+    fetch(`${apiUrlBase}/tasks`, options)
+        .then(response => response.json())
+        .then(tareas => {
+            const tareasFiltradas = tareas.filter(tarea => tarea.projectId === proyectoIdDeseado);
+            mostrarTareasPorCategoria(tareasFiltradas, proyecto);
+
+            // Código adicional para mostrar todos los estados en consola
+            const estadosUnicos = [...new Set(tareasFiltradas.map(tarea => tarea.status))];
+            console.log("Estados únicos devueltos por la API de Holded:", estadosUnicos);
+        })
+        .catch(error => {
+            console.error('Error al obtener tareas:', error);
+            document.getElementById(`tareas-${proyectoIdDeseado}`).innerHTML = '<p>No se pudieron obtener las tareas.</p>';
+        });
+}
+
+// Función para mostrar el proyecto en la interfaz
 function mostrarProyecto(proyecto) {
     const proyectoContainer = document.getElementById('proyectoContainer');
     proyectoContainer.innerHTML = `
         <div class="col-12 mb-4">
             <div class="card">
                 <div class="card-body">
-                   
                     <div id="tareas-${proyecto.id}" class="tareas-container">
                         <p>Cargando tareas...</p>
                     </div>
