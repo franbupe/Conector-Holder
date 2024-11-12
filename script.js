@@ -18,15 +18,27 @@ function cargarProyecto() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json(); // Intentamos parsear a JSON
-        })
-        .then(proyectos => {
-            const proyecto = proyectos.find(p => p.id === proyectoIdDeseado);
-            if (proyecto) {
-                mostrarProyecto(proyecto);
-                cargarTareasPorProyecto(proyecto);
+            // Verifica si la respuesta es JSON o HTML
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                return response.json(); // Procesa como JSON
             } else {
-                document.getElementById('proyectoContainer').innerHTML = '<p>No se encontró el proyecto especificado.</p>';
+                return response.text(); // Procesa como texto
+            }
+        })
+        .then(data => {
+            if (typeof data === 'string') {
+                // Si la respuesta es HTML, muestra un error detallado
+                console.error('Se recibió una respuesta en HTML en lugar de JSON:', data);
+                document.getElementById('proyectoContainer').innerHTML = '<p>Error al obtener el proyecto: Respuesta inesperada del servidor.</p>';
+            } else {
+                const proyecto = data.find(p => p.id === proyectoIdDeseado);
+                if (proyecto) {
+                    mostrarProyecto(proyecto);
+                    cargarTareasPorProyecto(proyecto);
+                } else {
+                    document.getElementById('proyectoContainer').innerHTML = '<p>No se encontró el proyecto especificado.</p>';
+                }
             }
         })
         .catch(error => {
@@ -34,6 +46,7 @@ function cargarProyecto() {
             document.getElementById('proyectoContainer').innerHTML = '<p>No se pudo obtener el proyecto.</p>';
         });
 }
+
 
 
 function cargarTareasPorProyecto(proyecto) {
