@@ -63,6 +63,12 @@ function mostrarProyecto(proyecto) {
 // Función para mostrar tareas por categoría en la interfaz
 function mostrarTareasPorCategoria(tareas, proyecto) {
     const tareasContainer = document.getElementById(`tareas-${proyectoIdDeseado}`);
+    
+    if (!tareasContainer) {
+        console.error(`No se encontró el contenedor de tareas con id="tareas-${proyectoIdDeseado}".`);
+        return;
+    }
+
     tareasContainer.innerHTML = '';
 
     const estadoClases = {
@@ -106,6 +112,7 @@ function mostrarTareasPorCategoria(tareas, proyecto) {
         }
     });
 }
+
 
 // Función para manejar el conteo de productos
 function iniciarConteo(tareaId, tareaName) {
