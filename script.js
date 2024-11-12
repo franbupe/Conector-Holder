@@ -1,6 +1,8 @@
 const apiKey = '41c0fff04435e0638a6406d64376d702'; // Coloca aquí tu API Key de Holded
 const proyectoIdDeseado = '6673294de56217109c01baeb'; // ID de proyecto específico de Holded
-const apiUrlBase = 'https://conector-holder.vercel.app/api/projects/v1'; // URL del proxy en Vercel
+
+const apiUrlBase = 'https://conector-holder.vercel.app/api/holdedProxy'; // Asegúrate de usar el dominio correcto
+
 
 // Llama a cargarProyecto directamente para que cargue al inicio
 cargarProyecto();
