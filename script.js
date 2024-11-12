@@ -1,7 +1,6 @@
-const apiKey = '41c0fff04435e0638a6406d64376d702';// Coloca aquí tu API Key de Holded
+const apiKey = '41c0fff04435e0638a6406d64376d702'; // Coloca aquí tu API Key de Holded
 
-const proyectoIdDeseado = '6673294de56217109c01baeb';// ID de proyecto específico de Holded
-
+const proyectoIdDeseado = '6673294de56217109c01baeb'; // ID de proyecto específico de Holded
 
 // Llama a cargarProyecto directamente para que cargue al inicio
 cargarProyecto();
@@ -12,7 +11,7 @@ function cargarProyecto() {
         headers: { accept: 'application/json', key: apiKey }
     };
 
-    fetch(`https://api.holded.com/api/projects/v1/projects`, options)
+    fetch(`https://conector-holder.vercel.app/api/projects/v1/projects`, options)
         .then(response => response.json())
         .then(proyectos => {
             const proyecto = proyectos.find(p => p.id === proyectoIdDeseado);
@@ -29,29 +28,13 @@ function cargarProyecto() {
         });
 }
 
-function mostrarProyecto(proyecto) {
-    const proyectoContainer = document.getElementById('proyectoContainer');
-    proyectoContainer.innerHTML = `
-        <div class="col-12 mb-4">
-            <div class="card">
-                <div class="card-body">
-                   
-                    <div id="tareas-${proyecto.id}" class="tareas-container">
-                        <p>Cargando tareas...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
 function cargarTareasPorProyecto(proyecto) {
     const options = {
         method: 'GET',
         headers: { accept: 'application/json', key: apiKey }
     };
 
-    fetch('https://api.holded.com/api/projects/v1/tasks', options)
+    fetch('https://conector-holder.vercel.app/api/projects/v1/tasks', options)
         .then(response => response.json())
         .then(tareas => {
             const tareasFiltradas = tareas.filter(tarea => tarea.projectId === proyectoIdDeseado);
