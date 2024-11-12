@@ -9,8 +9,9 @@ export default async function handler(req, res) {
         const response = await fetch(url, {
             method: req.method,
             headers: {
-                accept: 'application/json',
-                key: '41c0fff04435e0638a6406d64376d702' // Reemplaza con tu API Key de Holded
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer 41c0fff04435e0638a6406d64376d702`, // Cambia `YOUR_API_KEY` por la clave de API correcta
+                'Accept': 'application/json'
             }
         });
 
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
         // Configuración de CORS
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, key');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
         // Responder con los datos de la API
         res.status(response.status).json(data);
