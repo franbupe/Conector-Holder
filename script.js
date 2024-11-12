@@ -13,9 +13,13 @@ function cargarProyecto() {
         headers: { accept: 'application/json', key: apiKey }
     };
 
-    // Usar el proxy en Vercel para obtener proyectos
     fetch(`${apiUrlBase}/projects`, options)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Intentamos parsear a JSON
+        })
         .then(proyectos => {
             const proyecto = proyectos.find(p => p.id === proyectoIdDeseado);
             if (proyecto) {
@@ -30,6 +34,7 @@ function cargarProyecto() {
             document.getElementById('proyectoContainer').innerHTML = '<p>No se pudo obtener el proyecto.</p>';
         });
 }
+
 
 function cargarTareasPorProyecto(proyecto) {
     const options = {
